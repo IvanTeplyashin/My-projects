@@ -318,9 +318,18 @@ SELECT DISTINCT ship
 FROM OUTCOMES)
 ```
 ##### Задача 37
-> 
+> Найдите классы, в которые входит только один корабль из базы данных (учесть также корабли в Outcomes).
 ```SQL
-
+SELECT class
+FROM (
+SELECT class, ship_name
+FROM (SELECT Classes.class, Ships.name AS ship_name FROM Classes, Ships WHERE Classes.class = Ships.class) a
+UNION
+SELECT class, ship_name
+FROM (SELECT Classes.class, Outcomes.ship AS ship_name FROM Classes, Outcomes WHERE Classes.class = Outcomes.ship) b
+) e
+GROUP BY class
+HAVING COUNT(class) = 1
 ```
 ##### Задача 38
 > Найдите страны, имевшие когда-либо классы обычных боевых кораблей ('bb') и имевшие когда-либо классы крейсеров ('bc').
