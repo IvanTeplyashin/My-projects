@@ -524,9 +524,17 @@ AND (b.displacement <= 65000 OR b.displacement IS NULL)
 
 ```
 ##### Задача 59
-> 
+> Посчитать остаток денежных средств на каждом пункте приема для базы данных с отчетностью не чаще одного раза в день. Вывод: пункт, остаток.
 ```SQL
-
+SELECT point, SUM(rem)
+FROM(
+SELECT point, inc AS rem 
+FROM Income_o
+UNION ALL
+SELECT point, (-1)*out AS rem
+FROM Outcome_o
+) a
+GROUP BY(point)
 ```
 ##### Задача 60
 > 
