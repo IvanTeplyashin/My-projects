@@ -603,8 +603,41 @@ END) AS rn
 ) a
 ```
 ##### Задача 66
-> 
+> Для всех дней в интервале с 01/04/2003 по 07/04/2003 определить число рейсов из Rostov с пассажирами на борту.
+Вывод: дата, количество рейсов.
 ```SQL
+SELECT Date, SUM(qty) AS QTY
+FROM (Select CAST(date AS DATETIME) AS Date, COUNT (DISTINCT trip_no) AS qty
+FROM 
+(SELECT trip_no, date, ID_psg FROM Pass_in_trip) a
+INNER JOIN
+(SELECT DISTINCT trip_no AS num, town_from FROM Trip) b
+ON a.trip_no = b.num
+WHERE YEAR(date) = 2003 AND MONTH(date) = 4  AND town_from = 'Rostov' AND DAY(date) IN (1, 2, 3, 4, 5, 6, 7)
+GROUP BY trip_no, date
+HAVING COUNT(ID_psg) > 0
+UNION ALL 
+SELECT CAST('2003-04-01 00:00:00.000' AS DATETIME) AS date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-02 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-03 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-04 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-05 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-06 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty
+UNION ALL
+SELECT CAST('2003-04-07 00:00:00.000' AS DATETIME) AS Date,
+0 AS qty) s
+GROUP BY date
 
 ```
 ##### Задача 67
