@@ -667,3 +667,36 @@ GROUP BY date
 ```SQL
 
 ```
+##### Задача 71
+> 
+```SQL
+
+```
+##### Задача 72
+> 
+```SQL
+
+```
+##### Задача 73
+> Для каждой страны определить сражения, в которых не участвовали корабли данной страны.
+Вывод: страна, сражение
+```SQL
+SELECT Classes.country, Battles.name AS battle
+FROM Classes, Battles
+EXCEPT
+(SELECT country, battle 
+FROM Ships INNER JOIN Classes ON Ships.class = Classes.class INNER JOIN Outcomes ON Ships.name = Outcomes.ship
+UNION
+SELECT country, battle
+FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.ship NOT IN (SELECT name FROM Ships))
+```
+##### Задача 74
+> 
+```SQL
+
+```
+##### Задача 75
+> 
+```SQL
+
+```
