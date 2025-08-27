@@ -274,9 +274,16 @@ FROM Classes
 WHERE bore >= 16
 ```
 ##### Задача 32
-> 
+> Одной из характеристик корабля является половина куба калибра его главных орудий (mw). С точностью до 2 десятичных знаков определите среднее значение mw для кораблей каждой страны, у которой есть корабли в базе данных.
 ```SQL
-
+SELECT country, 
+cast(AVG(POWER(bore,3)/2) AS DECIMAL(18,2)) AS weight 
+FROM (SELECT country, bore, name
+FROM Ships INNER JOIN Classes ON Ships.class = Classes.class
+UNION
+SELECT country, bore, ship
+FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.ship NOT IN (SELECT name FROM Ships)) a
+GROUP BY country
 ```
 ##### Задача 33
 > Укажите корабли, потопленные в сражениях в Северной Атлантике (North Atlantic). Вывод: ship.
