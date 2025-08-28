@@ -696,7 +696,27 @@ FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.s
 
 ```
 ##### Задача 75
-> 
+> Для тех производителей, у которых есть продукты с известной ценой хотя бы в одной из таблиц Laptop, PC, Printer найти максимальные цены на каждый из типов продукции.
+Вывод: maker, максимальная цена на ноутбуки, максимальная цена на ПК, максимальная цена на принтеры.
+Для отсутствующих продуктов/цен использовать NULL.
 ```SQL
-
+SELECT DISTINCT maker, max_price_laptop, max_price_pc, max_price_printer
+FROM
+(SELECT DISTINCT maker, 
+FIRST_VALUE(price) OVER 
+(PARTITION BY maker ORDER BY price DESC) AS max_price_laptop
+FROM (SELECT maker, price FROM Product LEFT JOIN Laptop ON Product.model = Laptop.model) a) a0
+LEFT JOIN
+(SELECT DISTINCT maker AS mp, 
+FIRST_VALUE(price) OVER 
+(PARTITION BY maker ORDER BY price DESC) AS max_price_pc
+FROM (SELECT maker, price FROM Product LEFT JOIN PC ON Product.model = PC.model) b) b0
+ON a0.maker = b0.mp
+LEFT JOIN
+(SELECT DISTINCT maker AS mpr, 
+FIRST_VALUE(price) OVER 
+(PARTITION BY maker ORDER BY price DESC) AS max_price_printer
+FROM (SELECT maker, price FROM Product LEFT JOIN Printer ON Product.model = Printer.model) c) c0
+ON a0.maker = c0.mpr
+WHERE max_price_laptop IS NOT NULL OR max_price_pc IS NOT NULL OR max_price_printer IS NOT NULL
 ```
