@@ -798,9 +798,26 @@ FROM PC)
 
 ```
 ##### Задача 83
-> 
+> Определить названия всех кораблей из таблицы Ships, которые удовлетворяют, по крайней мере, комбинации любых четырёх критериев из следующего списка:
+numGuns = 8
+bore = 15
+displacement = 32000
+type = bb
+launched = 1915
+class=Kongo
+country=USA
 ```SQL
-
+SELECT name
+FROM (SELECT name,
+CASE WHEN numGuns = 8 THEN 1 ELSE 0 END flg1,
+CASE WHEN bore = 15 THEN 1 ELSE 0 END flg2,
+CASE WHEN displacement = 32000 THEN 1 ELSE 0 END flg3,
+CASE WHEN type = 'bb' THEN 1 ELSE 0 END flg4,
+CASE WHEN launched = 1915 THEN 1 ELSE 0 END flg5,
+CASE WHEN s.class = 'Kongo' THEN 1 ELSE 0 END flg6,
+CASE WHEN country = 'USA' THEN 1 ELSE 0 END flg7
+FROM Ships s INNER JOIN Classes c ON s.class = c.class) a
+WHERE flg1 + flg2 + flg3 + flg4 + flg5 + flg6 + flg7 >= 4
 ```
 ##### Задача 84
 > 
