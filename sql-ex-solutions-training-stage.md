@@ -772,9 +772,20 @@ FROM Battles
 
 ```
 ##### Задача 80
-> 
+> Найти производителей любой компьютерной техники, у которых нет моделей ПК, не представленных в таблице PC.
 ```SQL
-
+SELECT DISTINCT maker 
+FROM Product
+EXCEPT
+SELECT DISTINCT maker 
+FROM Product
+WHERE model IN
+(SELECT DISTINCT model
+FROM Product
+WHERE type = 'PC'
+EXCEPT 
+SELECT DISTINCT model
+FROM PC)
 ```
 ##### Задача 81
 > 
