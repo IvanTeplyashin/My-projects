@@ -257,9 +257,16 @@ HAVING COUNT(model) = 1
 ) a
 ```
 ##### Задача 29
-> 
+> В предположении, что приход и расход денег на каждом пункте приема фиксируется не чаще одного раза в день [т.е. первичный ключ (пункт, дата)], написать запрос с выходными данными (пункт, дата, приход, расход). Использовать таблицы Income_o и Outcome_o.
 ```SQL
-
+SELECT p1 AS Point, d1 AS Date, inc, out
+FROM (SELECT point AS p1, date AS d1, inc FROM Income_o) a LEFT JOIN (SELECT point AS p2, date AS d2, out FROM Outcome_o) b ON a.p1 = b.p2 AND a.d1 = b.d2
+UNION
+SELECT p1 AS Point, d1 AS Date, inc, out
+FROM (SELECT point AS p1, date AS d1, inc FROM Income_o) a INNER JOIN (SELECT point AS p2, date AS d2, out FROM Outcome_o) b ON a.p1 = b.p2 AND a.d1 = b.d2
+UNION
+SELECT p1 AS Point, d1 AS Date, inc, out
+FROM (SELECT point AS p1, date AS d1, out FROM Outcome_o) a LEFT JOIN (SELECT point AS p2, date AS d2, inc FROM Income_o) b ON a.p1 = b.p2 AND a.d1 = b.d2
 ```
 ##### Задача 30
 > 
