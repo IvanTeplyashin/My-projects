@@ -450,14 +450,31 @@ LEFT JOIN (SELECT name, class FROM ships) b ON a.ship = b.name
 LEFT JOIN (SELECT class, displacement, numGuns FROM Classes) c ON b.class = c.class OR a.ship = c.class
 ```
 ##### Задача 47
-> 
+> Определить страны, которые потеряли в сражениях все свои корабли.
 ```SQL
-
+SELECT DISTINCT country
+FROM (SELECT country
+FROM Ships INNER JOIN Classes ON Ships.class = Classes.class
+UNION
+SELECT country
+FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.ship NOT IN (SELECT name FROM Ships)) b
+WHERE country NOT IN(
+SELECT DISTINCT country
+FROM (SELECT country, name
+FROM Ships INNER JOIN Classes ON Ships.class = Classes.class
+UNION
+SELECT country, ship
+FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.ship NOT IN (SELECT name FROM Ships)) a
+WHERE name NOT IN (SELECT ship FROM Outcomes WHERE result = 'sunk'))
 ```
 ##### Задача 48
-> 
+> Найдите классы кораблей, в которых хотя бы один корабль был потоплен в сражении.
 ```SQL
-
+SELECT Classes.class
+FROM Ships INNER JOIN Classes ON Ships.class = Classes.class AND Ships.name IN (SELECT ship FROM Outcomes WHERE result = 'sunk')
+UNION
+SELECT Classes.class
+FROM Outcomes INNER JOIN Classes ON Outcomes.ship = Classes.class AND Outcomes.ship NOT IN (SELECT name FROM Ships) AND Outcomes.ship IN (SELECT ship FROM Outcomes WHERE result = 'sunk')
 ```
 ##### Задача 49
 > Найдите названия кораблей с орудиями калибра 16 дюймов (учесть корабли из таблицы Outcomes).
